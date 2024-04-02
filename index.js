@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import voice from "elevenlabs-node";
 import express from "express";
 import { promises as fs } from "fs";
+import os from "os";
 import OpenAI from "openai";
 dotenv.config();
 
@@ -12,7 +13,7 @@ const openai = new OpenAI({
 });
 
 const elevenLabsApiKey = process.env.ELEVEN_LABS_API_KEY;
-const voiceID = "kgG7dCoKCfLehAPWkJOE";
+const voiceID = "21m00Tcm4TlvDq8ikWAM";
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/voices", async (req, res) => {
+  console.log("get voices");
   res.send(await voice.getVoices(elevenLabsApiKey));
 });
 
@@ -36,20 +38,35 @@ const execCommand = (command) => {
   });
 };
 
-const lipSyncMessage = async (message) => {
+/* const lipSyncMessage = async (message) => {
   const time = new Date().getTime();
-  console.log(`Starting conversion for message ${message}`);
+  console.log(`Starting newconversion for message ${message}`);
   await execCommand(
     `ffmpeg -y -i audios/message_${message}.mp3 audios/message_${message}.wav`
     // -y to overwrite the file
   );
+
+  // See if the file exists
+  if (await fs.readFile(`audios/message_${message}.wav`)) {
+    console.log("Wave file exists");
+  } else {
+    console.log("Wave file does not exist");
+  }
+
   console.log(`Conversion done in ${new Date().getTime() - time}ms`);
-  await execCommand(
-    `./bin/rhubarb -f json -o audios/message_${message}.json audios/message_${message}.wav -r phonetic`
-  );
+  if (os.platform() == "darwin") {
+    await execCommand(
+      `./macBin/rhubarb -f json  -r phonetic -o audios/message_${message}.json audios/message_${message}.wav`
+    );
+  } else {
+    await execCommand(
+      `./linBin/rhubarb -f json  -r phonetic -o audios/message_${message}.json audios/message_${message}.wav`
+    );
+  }
+
   // -r phonetic is faster but less accurate
   console.log(`Lip sync done in ${new Date().getTime() - time}ms`);
-};
+}; */
 
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
@@ -97,7 +114,7 @@ app.post("/chat", async (req, res) => {
   }
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo-1106",
+    model: "gpt-3.5-turbo",
     max_tokens: 1000,
     temperature: 0.6,
     response_format: {
@@ -109,9 +126,29 @@ app.post("/chat", async (req, res) => {
         content: `
         You are a virtual girlfriend.
         You will always reply with a JSON array of messages. With a maximum of 3 messages.
-        Each message has a text, facialExpression, and animation property.
+        Each message has a text, facialExpression, animation, and lipsyncRaw property.
         The different facial expressions are: smile, sad, angry, surprised, funnyFace, and default.
-        The different animations are: Talking_0, Talking_1, Talking_2, Crying, Laughing, Rumba, Idle, Terrified, and Angry. 
+        The different animations are: Talking_0, Talking_1, Talking_2, Crying, Laughing, Rumba, Idle, Terrified, and Angry.
+        The lipsyncRaw property should be in the scalar form normally returned from Rhubarb software and output to json format with all properties in quotes, such as: {
+          "metadata": {
+            "soundFile": "/Users/wawa/Documents/Projects/wawasensei/r3f-virtual-girlfriend-backend/audios/intro.wav",
+            "duration": 1.90
+          },
+          "mouthCues": [
+            { "start": 0.00, "end": 0.03, "value": "X" },
+            { "start": 0.03, "end": 0.15, "value": "C" },
+            { "start": 0.15, "end": 0.57, "value": "B" },
+            { "start": 0.57, "end": 0.94, "value": "X" },
+            { "start": 0.94, "end": 1.04, "value": "C" },
+            { "start": 1.04, "end": 1.11, "value": "E" },
+            { "start": 1.11, "end": 1.25, "value": "F" },
+            { "start": 1.25, "end": 1.32, "value": "B" },
+            { "start": 1.32, "end": 1.53, "value": "C" },
+            { "start": 1.53, "end": 1.60, "value": "B" },
+            { "start": 1.60, "end": 1.90, "value": "X" }
+          ]
+        }
+
         `,
       },
       {
@@ -121,6 +158,7 @@ app.post("/chat", async (req, res) => {
     ],
   });
   let messages = JSON.parse(completion.choices[0].message.content);
+  console.log("messages: ", messages);
   if (messages.messages) {
     messages = messages.messages; // ChatGPT is not 100% reliable, sometimes it directly returns an array and sometimes a JSON object with a messages property
   }
@@ -128,12 +166,16 @@ app.post("/chat", async (req, res) => {
     const message = messages[i];
     // generate audio file
     const fileName = `audios/message_${i}.mp3`; // The name of your audio file
+
     const textInput = message.text; // The text you wish to convert to speech
+
     await voice.textToSpeech(elevenLabsApiKey, voiceID, fileName, textInput);
     // generate lipsync
-    await lipSyncMessage(i);
+    //await lipSyncMessage(i);
     message.audio = await audioFileToBase64(fileName);
-    message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
+    //message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
+    message.lipsync = message.lipsyncRaw;
+    console.log("message.lipsync: ", message.lipsync);
   }
 
   res.send({ messages });
@@ -150,5 +192,6 @@ const audioFileToBase64 = async (file) => {
 };
 
 app.listen(port, () => {
+  console.log("platform: ", os.platform());
   console.log(`Virtual Girlfriend listening on port ${port}`);
 });
