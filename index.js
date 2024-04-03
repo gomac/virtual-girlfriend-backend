@@ -126,29 +126,9 @@ app.post("/chat", async (req, res) => {
         content: `
         You are a virtual girlfriend.
         You will always reply with a JSON array of messages. With a maximum of 3 messages.
-        Each message has a text, facialExpression, animation, and lipsyncRaw property.
+        Each message has a text, facialExpression, animation and property.
         The different facial expressions are: smile, sad, angry, surprised, funnyFace, and default.
         The different animations are: Talking_0, Talking_1, Talking_2, Crying, Laughing, Rumba, Idle, Terrified, and Angry.
-        The lipsyncRaw property should be in the scalar form normally returned from Rhubarb software and output to json format with all properties in quotes, such as: {
-          "metadata": {
-            "soundFile": "virtual-girlfriend-backend/audios/intro.wav",
-            "duration": 1.90
-          },
-          "mouthCues": [
-            { "start": 0.00, "end": 0.03, "value": "X" },
-            { "start": 0.03, "end": 0.15, "value": "C" },
-            { "start": 0.15, "end": 0.57, "value": "B" },
-            { "start": 0.57, "end": 0.94, "value": "X" },
-            { "start": 0.94, "end": 1.04, "value": "C" },
-            { "start": 1.04, "end": 1.11, "value": "E" },
-            { "start": 1.11, "end": 1.25, "value": "F" },
-            { "start": 1.25, "end": 1.32, "value": "B" },
-            { "start": 1.32, "end": 1.53, "value": "C" },
-            { "start": 1.53, "end": 1.60, "value": "B" },
-            { "start": 1.60, "end": 1.90, "value": "X" }
-          ]
-        }
-
         `,
       },
       {
@@ -158,7 +138,7 @@ app.post("/chat", async (req, res) => {
     ],
   });
   let messages = JSON.parse(completion.choices[0].message.content);
-  console.log("messages: ", messages);
+
   if (messages.messages) {
     messages = messages.messages; // ChatGPT is not 100% reliable, sometimes it directly returns an array and sometimes a JSON object with a messages property
   }
@@ -173,11 +153,8 @@ app.post("/chat", async (req, res) => {
     // generate lipsync
     //await lipSyncMessage(i);
     message.audio = await audioFileToBase64(fileName);
-    //message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
-    message.lipsync = message.lipsyncRaw;
-    console.log("message.lipsync: ", message.lipsync);
+    message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
   }
-
   res.send({ messages });
 });
 
