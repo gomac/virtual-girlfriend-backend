@@ -131,7 +131,7 @@ app.post("/chat", async (req, res) => {
         The different animations are: Talking_0, Talking_1, Talking_2, Crying, Laughing, Rumba, Idle, Terrified, and Angry.
         The lipsyncRaw property should be in the scalar form normally returned from Rhubarb software and output to json format with all properties in quotes, such as: {
           "metadata": {
-            "soundFile": "/Users/wawa/Documents/Projects/wawasensei/r3f-virtual-girlfriend-backend/audios/intro.wav",
+            "soundFile": "'name'.wav",
             "duration": 1.90
           },
           "mouthCues": [
