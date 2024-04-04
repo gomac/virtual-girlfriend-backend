@@ -149,7 +149,11 @@ app.post("/chat", async (req, res) => {
 
     const textInput = message.text; // The text you wish to convert to speech
 
-    await voice.textToSpeech(elevenLabsApiKey, voiceID, fileName, textInput);
+    try {
+      await voice.textToSpeech(elevenLabsApiKey, voiceID, fileName, textInput);
+    } catch (err) {
+      console.log("error textToSpeech: ", err);
+    }
     // generate lipsync
     //await lipSyncMessage(i);
     message.audio = await audioFileToBase64(fileName);
@@ -164,11 +168,15 @@ const readJsonTranscript = async (file) => {
 };
 
 const audioFileToBase64 = async (file) => {
-  const data = await fs.readFile(file);
+  try {
+    const data = await fs.readFile(file);
+  } catch (err) {
+    console.log("error reading file: ", err);
+  }
+
   return data.toString("base64");
 };
 
 app.listen(port, () => {
-  console.log("platform: ", os.platform());
   console.log(`Virtual Girlfriend listening on port ${port}`);
 });
