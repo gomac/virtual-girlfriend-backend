@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 import voice from "elevenlabs-node";
 import express from "express";
 import { promises as fs } from "fs";
-import os from "os";
+//import os from "os";
+import * as path from "path";
 import OpenAI from "openai";
 dotenv.config();
 
@@ -19,6 +20,21 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 const port = 3000;
+const dir = "audio";
+
+function createDirectories(pathname) {
+  const __dirname = path.resolve();
+  pathname = pathname.replace(/^\.*\/|\/?[^\/]+\.[a-z]+|\/$/g, ""); // Remove leading directory markers, and remove ending /file-name.extension
+  fs.mkdir(path.resolve(__dirname, pathname), { recursive: true }, (e) => {
+    if (e) {
+      console.error(e);
+    } else {
+      console.log("Success");
+    }
+  });
+}
+
+createDirectories("audio");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -153,9 +169,7 @@ app.post("/chat", async (req, res) => {
       console.log("text to create audio: ", textInput);
       // generate lipsync
       //await lipSyncMessage(i);
-      //message.audio = await audioFileToBase64(fileName);
-      const data = await fs.readFile(fileName);
-      message.audio = data.toString("base64");
+      message.audio = await audioFileToBase64(fileName);
       message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
     } catch (err) {
       console.log("ERROR textToSpeech: ", err);
