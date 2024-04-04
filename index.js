@@ -172,7 +172,7 @@ const audioFileToBase64 = async (file) => {
     const data = await fs.readFile(file);
     return data.toString("base64");
   } catch (err) {
-    console.log("error reading file: ", err);
+    console.log("ERROR: reading file: ", err);
   }
 };
 
