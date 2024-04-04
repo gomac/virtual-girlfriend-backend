@@ -14,7 +14,7 @@ const openai = new OpenAI({
 });
 
 const elevenLabsApiKey = process.env.ELEVEN_LABS_API_KEY;
-const voiceID = "29vD33N1CtxCmqQRPOHJ";
+const voiceID = "21m00Tcm4TlvDq8ikWAM";
 
 const app = express();
 app.use(express.json());
@@ -152,8 +152,9 @@ app.post("/chat", async (req, res) => {
       },
     ],
   });
+  console.log("Calling openAI");
   let messages = JSON.parse(completion.choices[0].message.content);
-
+  console.log("Received response from openAI openAI");
   if (messages.messages) {
     messages = messages.messages; // ChatGPT is not 100% reliable, sometimes it directly returns an array and sometimes a JSON object with a messages property
   }
