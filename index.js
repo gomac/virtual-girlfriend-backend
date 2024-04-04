@@ -161,6 +161,7 @@ app.post("/chat", async (req, res) => {
     const message = messages[i];
     // generate audio file
     try {
+      console.log("Calling createDirectories");
       createDirectories(dir);
 
       const fileName = `audios/message_${i}.mp3`; // The name of your audio file
