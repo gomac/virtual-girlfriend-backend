@@ -20,21 +20,20 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 const port = 3000;
-const dir = "audio";
+const dir = "audios";
 
 function createDirectories(pathname) {
   const __dirname = path.resolve();
   pathname = pathname.replace(/^\.*\/|\/?[^\/]+\.[a-z]+|\/$/g, ""); // Remove leading directory markers, and remove ending /file-name.extension
-  fs.mkdir(path.resolve(__dirname, pathname), { recursive: true }, (e) => {
+  fs.mkdir(pathname, { recursive: true }, (e) => {
+    console.log("inside createDirectories mkdir");
     if (e) {
-      console.error(e);
+      console.error(dir, "createDirectories already exists: ", e);
     } else {
-      console.log("Success");
+      console.log("SUCCESS");
     }
   });
 }
-
-createDirectories("audio");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -45,14 +44,14 @@ app.get("/voices", async (req, res) => {
   res.send(await voice.getVoices(elevenLabsApiKey));
 });
 
-const execCommand = (command) => {
+/* const execCommand = (command) => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) reject(error);
       resolve(stdout);
     });
   });
-};
+}; */
 
 /* const lipSyncMessage = async (message) => {
   const time = new Date().getTime();
@@ -162,6 +161,8 @@ app.post("/chat", async (req, res) => {
     const message = messages[i];
     // generate audio file
     try {
+      createDirectories(dir);
+
       const fileName = `audios/message_${i}.mp3`; // The name of your audio file
       console.log("filename is: ", fileName);
       const textInput = message.text; // The text you wish to convert to speech
