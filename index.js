@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 import cors from "cors";
 import dotenv from "dotenv";
-import voice from "elevenlabs-node";
+import ElevenLabs from "elevenlabs-node";
 import express from "express";
 import { promises as fs } from "fs";
 //import os from "os";
@@ -15,6 +15,12 @@ const openai = new OpenAI({
 
 const elevenLabsApiKey = process.env.ELEVEN_LABS_API_KEY;
 const voiceID = "21m00Tcm4TlvDq8ikWAM";
+
+const elevenOptions = {
+  apiKey: elevenLabsApiKey, // Your API key from Elevenlabs
+  voiceId: "21m00Tcm4TlvDq8ikWAM", // A Voice ID from Elevenlabs
+};
+const voice = new ElevenLabs(elevenOptions);
 
 const app = express();
 app.use(express.json());
@@ -85,6 +91,7 @@ app.get("/voices", async (req, res) => {
 
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
+  console.log("userMessage***: ", userMessage);
   if (!userMessage) {
     res.send({
       messages: [
@@ -169,7 +176,12 @@ app.post("/chat", async (req, res) => {
       console.log("filename is: ", fileName);
       const textInput = message.text; // The text you wish to convert to speech
       console.log("elevenbuddy: ", elevenLabsApiKey);
-      await voice.textToSpeech(elevenLabsApiKey, voiceID, fileName, textInput);
+      const response = await voice.textToSpeech({
+        voiceID,
+        fileName,
+        textInput,
+      });
+
       console.log("text to create audio: ", textInput);
       // generate lipsync
       //await lipSyncMessage(i);

@@ -253,10 +253,10 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
-elevenlabs-node@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/elevenlabs-node/-/elevenlabs-node-1.2.0.tgz#a8a89a09d09e342c544b147b5dca61ec69880099"
-  integrity sha512-T5ITXXG0lmLKzWjqz4zH3HtNRqAFkMt7mriWAw11fakS417LQkJPIPj4566znGK79E9xmZVVwzf2D0WBxkVzmw==
+elevenlabs-node@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/elevenlabs-node/-/elevenlabs-node-2.0.3.tgz#6823f25bb6f3d9d0179c2338293e9704f6f3e0d9"
+  integrity sha512-BB6JopTDT+dJ/yNMhqPBzu2yz5Pooos86c8/CFZT6PRnx2in9wh3z560ae/6qpv5XRbpNOOhi/aC51CTdYJr5A==
   dependencies:
     axios "^1.4.0"
     fs-extra "^11.1.1"
