@@ -253,10 +253,9 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
-elevenlabs-node@^2.0.3:
+"elevenlabs-node@https://github.com/gomac/elevenlabs-node.git":
   version "2.0.3"
-  resolved "https://registry.yarnpkg.com/elevenlabs-node/-/elevenlabs-node-2.0.3.tgz#6823f25bb6f3d9d0179c2338293e9704f6f3e0d9"
-  integrity sha512-BB6JopTDT+dJ/yNMhqPBzu2yz5Pooos86c8/CFZT6PRnx2in9wh3z560ae/6qpv5XRbpNOOhi/aC51CTdYJr5A==
+  resolved "https://github.com/gomac/elevenlabs-node.git#595de3853e06569ffce9a7a68e0fadb4c093b81e"
   dependencies:
     axios "^1.4.0"
     fs-extra "^11.1.1"

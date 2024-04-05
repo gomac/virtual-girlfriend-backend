@@ -3,3 +3,5 @@ node_modules
 bin
 audiosBack
 Dockerfile
+messages*
+testElevenLabs.js

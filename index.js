@@ -18,7 +18,7 @@ const voiceID = "21m00Tcm4TlvDq8ikWAM";
 
 const elevenOptions = {
   apiKey: elevenLabsApiKey, // Your API key from Elevenlabs
-  voiceId: "21m00Tcm4TlvDq8ikWAM", // A Voice ID from Elevenlabs
+  voiceId: voiceID, // A Voice ID from Elevenlabs
 };
 const voice = new ElevenLabs(elevenOptions);
 
@@ -91,7 +91,7 @@ app.get("/voices", async (req, res) => {
 
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
-  console.log("userMessage***: ", userMessage);
+
   if (!userMessage) {
     res.send({
       messages: [
@@ -180,6 +180,7 @@ app.post("/chat", async (req, res) => {
         voiceID,
         fileName,
         textInput,
+        similarityBoost: 0,
       });
 
       console.log("text to create audio: ", textInput);
