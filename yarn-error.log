@@ -14,17 +14,17 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/gomac%2felevenlabs-node: Request "https://registry.yarnpkg.com/gomac%2felevenlabs-node" returned a 405
-      at params.callback [as _callback] (/Users/gordonmcintyre/.yarn/lib/cli.js:67038:18)
-      at self.callback (/Users/gordonmcintyre/.yarn/lib/cli.js:140883:22)
+  Error: https://github.com/gomac/elevenlabs-node.git/0.1.1: Request failed "404 Not Found"
+      at ResponseError.ExtendableBuiltin (/Users/gordonmcintyre/.yarn/lib/cli.js:696:66)
+      at new ResponseError (/Users/gordonmcintyre/.yarn/lib/cli.js:802:124)
+      at Request.<anonymous> (/Users/gordonmcintyre/.yarn/lib/cli.js:67099:16)
       at Request.emit (node:events:519:28)
-      at Request.<anonymous> (/Users/gordonmcintyre/.yarn/lib/cli.js:141855:10)
-      at Request.emit (node:events:519:28)
-      at IncomingMessage.<anonymous> (/Users/gordonmcintyre/.yarn/lib/cli.js:141777:12)
-      at Object.onceWrapper (node:events:633:28)
-      at IncomingMessage.emit (node:events:531:35)
-      at endReadableNT (node:internal/streams/readable:1696:12)
-      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+      at module.exports.Request.onRequestResponse (/Users/gordonmcintyre/.yarn/lib/cli.js:141760:10)
+      at ClientRequest.emit (node:events:519:28)
+      at HTTPParser.parserOnIncomingClient (node:_http_client:690:27)
+      at HTTPParser.parserOnHeadersComplete (node:_http_common:119:17)
+      at TLSSocket.socketOnData (node:_http_client:532:22)
+      at TLSSocket.emit (node:events:519:28)
 
 npm manifest: 
   {
@@ -41,7 +41,7 @@ npm manifest:
     "dependencies": {
       "cors": "^2.8.5",
       "dotenv": "^16.4.5",
-      "gomac/elevenlabs-node": "0.1.1",
+      "elevenlabs-node": "https://github.com/gomac/elevenlabs-node.git/0.1.1",
       "express": "^4.18.2",
       "openai": "^4.26.0"
     },
@@ -309,10 +309,9 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
     integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
   
-  elevenlabs-node@^2.0.3:
+  "elevenlabs-node@https://github.com/gomac/elevenlabs-node.git":
     version "2.0.3"
-    resolved "https://registry.yarnpkg.com/elevenlabs-node/-/elevenlabs-node-2.0.3.tgz#6823f25bb6f3d9d0179c2338293e9704f6f3e0d9"
-    integrity sha512-BB6JopTDT+dJ/yNMhqPBzu2yz5Pooos86c8/CFZT6PRnx2in9wh3z560ae/6qpv5XRbpNOOhi/aC51CTdYJr5A==
+    resolved "https://github.com/gomac/elevenlabs-node.git#595de3853e06569ffce9a7a68e0fadb4c093b81e"
     dependencies:
       axios "^1.4.0"
       fs-extra "^11.1.1"
