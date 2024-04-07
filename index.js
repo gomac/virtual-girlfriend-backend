@@ -187,8 +187,8 @@ app.post("/chat", async (req, res) => {
       console.log("text to create audio: ", textInput);
       // generate lipsync
       //await lipSyncMessage(i);
-      message.audio = await audioFileToBase64(fileName);
-      message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
+      //message.audio = await audioFileToBase64(fileName);
+      //message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
     } catch (err) {
       console.log("ERROR textToSpeech: ", err);
     }
