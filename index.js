@@ -182,6 +182,7 @@ app.post("/chat", async (req, res) => {
         textInput,
         similarityBoost: 0,
       });
+      console.log("Elevenlabs response: ", response);
 
       console.log("text to create audio: ", textInput);
       // generate lipsync
