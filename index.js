@@ -1,10 +1,8 @@
 import { exec } from "child_process";
 import cors from "cors";
 import dotenv from "dotenv";
-import ElevenLabs from "elevenlabs-node";
+import ElevenLabs from "./apis.js";
 import express from "express";
-import { promises as fs } from "fs";
-//import os from "os";
 import * as path from "path";
 import OpenAI from "openai";
 dotenv.config();
@@ -26,20 +24,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 const port = 3000;
-const dir = "audios";
-
-function createDirectories(pathname) {
-  const __dirname = path.resolve();
-  pathname = pathname.replace(/^\.*\/|\/?[^\/]+\.[a-z]+|\/$/g, ""); // Remove leading directory markers, and remove ending /file-name.extension
-  fs.mkdir(pathname, { recursive: true }, (e) => {
-    console.log("inside createDirectories mkdir");
-    if (e) {
-      console.error(dir, "createDirectories already exists: ", e);
-    } else {
-      console.log("SUCCESS");
-    }
-  });
-}
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -49,45 +33,6 @@ app.get("/voices", async (req, res) => {
   console.log("get voices");
   res.send(await voice.getVoices(elevenLabsApiKey));
 });
-
-/* const execCommand = (command) => {
-  return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) reject(error);
-      resolve(stdout);
-    });
-  });
-}; */
-
-/* const lipSyncMessage = async (message) => {
-  const time = new Date().getTime();
-  console.log(`Starting newconversion for message ${message}`);
-  await execCommand(
-    `ffmpeg -y -i audios/message_${message}.mp3 audios/message_${message}.wav`
-    // -y to overwrite the file
-  );
-
-  // See if the file exists
-  if (await fs.readFile(`audios/message_${message}.wav`)) {
-    console.log("Wave file exists");
-  } else {
-    console.log("Wave file does not exist");
-  }
-
-  console.log(`Conversion done in ${new Date().getTime() - time}ms`);
-  if (os.platform() == "darwin") {
-    await execCommand(
-      `./macBin/rhubarb -f json  -r phonetic -o audios/message_${message}.json audios/message_${message}.wav`
-    );
-  } else {
-    await execCommand(
-      `./linBin/rhubarb -f json  -r phonetic -o audios/message_${message}.json audios/message_${message}.wav`
-    );
-  }
-
-  // -r phonetic is faster but less accurate
-  console.log(`Lip sync done in ${new Date().getTime() - time}ms`);
-}; */
 
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
@@ -169,25 +114,24 @@ app.post("/chat", async (req, res) => {
     const message = messages[i];
     // generate audio file
     try {
-      //console.log("Calling createDirectories");
-      //createDirectories(dir);
-
-      const fileName = `audios/message_${i}.mp3`; // The name of your audio file
-      console.log("filename is: ", fileName);
       const textInput = message.text; // The text you wish to convert to speech
       console.log("elevenbuddy: ", elevenLabsApiKey);
+      console.log("sending text to create audio: ", textInput);
+
       const response = await voice.textToSpeech({
         voiceID,
-        fileName,
         textInput,
         similarityBoost: 0,
       });
-      console.log("Elevenlabs response: ", response);
 
-      console.log("text to create audio: ", textInput);
+      //console.log("ElevenLabs response: ", response);
       // generate lipsync
       //await lipSyncMessage(i);
-      //message.audio = await audioFileToBase64(fileName);
+
+      //const buffer64 = Buffer.from(response.data, "binary").toString("base64");
+
+      message.audio = response;
+
       //message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
     } catch (err) {
       console.log("ERROR textToSpeech: ", err);
