@@ -78,7 +78,7 @@ ElevenLabs.prototype.textToSpeech = async function ({
     });
 
     return new Promise((resolve, reject) => {
-      console.log("response.data: ", response.data);
+      //console.log("response.data: ", response.data);
       const buffer64 = Buffer.from(response.data, "binary").toString("base64");
       resolve(buffer64);
     });

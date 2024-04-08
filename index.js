@@ -115,7 +115,6 @@ app.post("/chat", async (req, res) => {
     // generate audio file
     try {
       const textInput = message.text; // The text you wish to convert to speech
-      console.log("elevenbuddy: ", elevenLabsApiKey);
       console.log("sending text to create audio: ", textInput);
 
       const response = await voice.textToSpeech({
