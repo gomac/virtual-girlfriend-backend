@@ -80,6 +80,7 @@ app.post("/chat", async (req, res) => {
     return;
   }
 
+  var beforeOpenAI = performance.now();
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     max_tokens: 1000,
@@ -93,9 +94,10 @@ app.post("/chat", async (req, res) => {
         content: `
         You are a virtual girlfriend.
         You will always reply with a JSON array of messages. With a maximum of 3 messages.
-        Each message has a text, facialExpression, animation and property.
+        Each message has a text, facialExpression and animation property.
         The different facial expressions are: smile, sad, angry, surprised, funnyFace, and default.
         The different animations are: Talking_0, Talking_1, Talking_2, Crying, Laughing, Rumba, Idle, Terrified, and Angry.
+        }
         `,
       },
       {
@@ -104,9 +106,10 @@ app.post("/chat", async (req, res) => {
       },
     ],
   });
-  console.log("Calling openAI");
+
   let messages = JSON.parse(completion.choices[0].message.content);
-  console.log("Received response from openAI openAI");
+  var afterOpenAI = performance.now();
+
   if (messages.messages) {
     messages = messages.messages; // ChatGPT is not 100% reliable, sometimes it directly returns an array and sometimes a JSON object with a messages property
   }
@@ -123,19 +126,24 @@ app.post("/chat", async (req, res) => {
         similarityBoost: 0,
       });
 
-      //console.log("ElevenLabs response: ", response);
-      // generate lipsync
-      //await lipSyncMessage(i);
-
-      //const buffer64 = Buffer.from(response.data, "binary").toString("base64");
+      /*       message.lipsync = JSON.parse(JSON.stringify(message.lipsync));
+      console.log(
+        "JSON.stringify(JSON.parse(JSON.stringify(message.lipsync));: ",
+        JSON.parse(JSON.stringify(message.lipsync))
+      ); */
 
       message.audio = response;
-
-      //message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
     } catch (err) {
       console.log("ERROR textToSpeech: ", err);
     }
   }
+  var afterEleven = performance.now();
+
+  console.log("openAI took " + (afterOpenAI - beforeOpenAI) + " milliseconds.");
+  console.log(
+    "elevenLabs took " + (afterEleven - afterOpenAI) + " milliseconds."
+  );
+
   res.send({ messages });
 });
 
