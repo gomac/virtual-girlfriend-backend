@@ -1,6 +1,5 @@
 import axios from "axios";
 const elevenLabsAPIV1 = "https://api.elevenlabs.io/v1";
-import fs from "fs-extra";
 /**
 
 Function initializes ElevenLabs API.
@@ -78,9 +77,7 @@ ElevenLabs.prototype.textToSpeech = async function ({
     });
 
     return new Promise((resolve, reject) => {
-      //console.log("response.data: ", response.data);
-      const buffer64 = Buffer.from(response.data, "binary").toString("base64");
-      resolve(buffer64);
+      resolve(response.data);
     });
   } catch (error) {
     console.log(error);
