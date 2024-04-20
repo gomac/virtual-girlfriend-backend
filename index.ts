@@ -1,6 +1,6 @@
 import cors from "cors";
 import "dotenv/config";
-import textToSpeech from "./api/azureTTS.js";
+import textToSpeech from "./api/azureTTS";
 import express from "express";
 import { promises as fs } from "fs";
 import OpenAI from "openai";
@@ -11,7 +11,7 @@ interface SpeechData {
 }
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "-", // Your OpenAI API key here, I used "-" to avoid errors when the key is not set but you should not do that
+  apiKey: process.env.OPENAI_API_KEY || "-", // Your OpenAI key here, I used "-" to avoid errors when the key is not set but you should not do that
 });
 
 const app = express();
