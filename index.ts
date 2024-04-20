@@ -1,7 +1,7 @@
 import cp, { exec } from "child_process";
 import cors from "cors";
 import "dotenv/config";
-import textToSpeech from "./api/azureTTS";
+import textToSpeech from "./api/azureTTS.ts";
 import express from "express";
 import * as path from "path";
 import { promises as fs } from "fs";
