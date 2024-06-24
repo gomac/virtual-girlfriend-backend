@@ -17,7 +17,7 @@ const openai = new OpenAI({
 const app = express();
 app.use(express.json());
 app.use(cors());
-const port = 3000;
+const port = 5000;
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
