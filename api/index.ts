@@ -1,6 +1,6 @@
 import cors from "cors";
 import "dotenv/config";
-import textToSpeech from "./api/azureTTS";
+import textToSpeech from "./azureTTS";
 import express from "express";
 import { promises as fs } from "fs";
 import OpenAI from "openai";
@@ -17,6 +17,7 @@ const openai = new OpenAI({
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 const port = 5000;
 
 app.get("/", (req, res) => {
@@ -98,6 +99,8 @@ const audioFileToBase64 = async (file: string) => {
     console.log("ERROR: reading file: ", err);
   }
 };
+
+module.exports = app;
 
 app.listen(port, () => {
   console.log(`Virtual Girlfriend listening on port ${port}`);
